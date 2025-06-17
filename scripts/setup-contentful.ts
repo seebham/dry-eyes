@@ -20,7 +20,7 @@ const client = createClient({
   accessToken: CONTENTFUL_MANAGEMENT_TOKEN,
 });
 
-async function getOrCreateContentType(
+async function createNewContentType(
   env: Environment,
   id: string,
   data: {
@@ -29,38 +29,27 @@ async function getOrCreateContentType(
     fields: any[];
     displayField?: string;
   }
-): Promise<ContentType> {
+): Promise<ContentType | null> {
   try {
-    let contentType = await env.getContentType(id);
-    console.log(`Content type "${id}" already exists. Checking status...`);
-
-    if (contentType.isPublished()) {
-      console.log(`Content type "${id}" is published. Unpublishing...`);
-      contentType = await contentType.unpublish();
-      console.log(`Content type "${id}" unpublished.`);
-    }
-
-    console.log(`Updating content type "${id}"...`);
-    contentType.name = data.name;
-    contentType.description = data.description;
-    contentType.fields = data.fields;
-    contentType.displayField = data.displayField || data.fields[0]?.id;
-
-    const updatedContentType = await contentType.update();
-    console.log(`Content type "${id}" updated.`);
-    return updatedContentType;
+    // Check if content type already exists
+    await env.getContentType(id);
+    console.log(`Content type "${id}" already exists. Skipping creation.`);
+    return null;
   } catch (error) {
-    console.log(`Content type "${id}" does not exist. Creating...`);
+    // Content type doesn't exist, create it
+    console.log(`Creating new content type "${id}"...`);
     const newContentType = await env.createContentTypeWithId(id, {
       ...data,
       displayField: data.displayField || data.fields[0]?.id,
     });
-    console.log(`Content type "${id}" created.`);
+    console.log(`Content type "${id}" created successfully.`);
     return newContentType;
   }
 }
 
-async function publishContentType(contentType: ContentType) {
+async function publishContentType(contentType: ContentType | null) {
+  if (!contentType) return;
+
   try {
     await contentType.publish();
     console.log(`Content type "${contentType.sys.id}" published.`);
@@ -78,7 +67,7 @@ async function run() {
   const env = await space.getEnvironment(CONTENTFUL_ENVIRONMENT);
 
   // 1. NavLink
-  const navLink = await getOrCreateContentType(env, "navLink", {
+  const navLink = await createNewContentType(env, "navLink", {
     name: "Nav Link",
     description: "A link with text and a URL, used in navigation and footers.",
     fields: [
@@ -89,7 +78,7 @@ async function run() {
   await publishContentType(navLink);
 
   // 2. Navigation
-  const navigation = await getOrCreateContentType(env, "navigation", {
+  const navigation = await createNewContentType(env, "navigation", {
     name: "Navigation",
     description: "Defines a navigation menu.",
     fields: [
@@ -110,9 +99,10 @@ async function run() {
   await publishContentType(navigation);
 
   // 3. Hero Section
-  const heroSection = await getOrCreateContentType(env, "heroSection", {
+  const heroSection = await createNewContentType(env, "heroSection", {
     name: "Hero Section",
-    description: "A full-width section with a headline, subtext, and CTA.",
+    description:
+      "A full-width section with a headline, subtext, and background image.",
     fields: [
       { id: "headline", name: "Headline", type: "Symbol", required: true },
       { id: "subtext", name: "Subtext", type: "Text", required: false },
@@ -129,49 +119,58 @@ async function run() {
         type: "Symbol",
         required: true,
       },
-      { id: "ctaText", name: "CTA Text", type: "Symbol", required: true },
-      { id: "ctaUrl", name: "CTA URL", type: "Symbol", required: true },
     ],
   });
   await publishContentType(heroSection);
 
-  // 4. Image & Text Section
-  const imageTextSection = await getOrCreateContentType(
-    env,
-    "imageTextSection",
-    {
-      name: "Image & Text Section",
-      description: "A section with an image and rich text content.",
-      fields: [
-        { id: "title", name: "Title", type: "Symbol", required: true },
-        { id: "content", name: "Content", type: "RichText", required: true },
-        {
-          id: "image",
-          name: "Image",
-          type: "Link",
-          linkType: "Asset",
-          required: true,
-        },
-        {
-          id: "imageAlt",
-          name: "Image Alt Text",
-          type: "Symbol",
-          required: true,
-        },
-        {
-          id: "imagePosition",
-          name: "Image Position",
-          type: "Symbol",
-          required: true,
-          validations: [{ in: ["Left", "Right"] }],
-        },
-      ],
-    }
-  );
+  // 4. CTA
+  const cta = await createNewContentType(env, "cta", {
+    name: "CTA",
+    description:
+      "A call-to-action block with optional title, description, and required CTA button.",
+    displayField: "ctaTitle",
+    fields: [
+      { id: "title", name: "Title", type: "Symbol", required: false },
+      { id: "description", name: "Description", type: "Text", required: false },
+      { id: "ctaTitle", name: "CTA Title", type: "Symbol", required: true },
+      { id: "ctaUrl", name: "CTA URL", type: "Symbol", required: true },
+    ],
+  });
+  await publishContentType(cta);
+
+  // 5. Image & Text Section
+  const imageTextSection = await createNewContentType(env, "imageTextSection", {
+    name: "Image & Text Section",
+    description: "A section with an image and rich text content.",
+    fields: [
+      { id: "title", name: "Title", type: "Symbol", required: true },
+      { id: "content", name: "Content", type: "RichText", required: true },
+      {
+        id: "image",
+        name: "Image",
+        type: "Link",
+        linkType: "Asset",
+        required: true,
+      },
+      {
+        id: "imageAlt",
+        name: "Image Alt Text",
+        type: "Symbol",
+        required: true,
+      },
+      {
+        id: "imagePosition",
+        name: "Image Position",
+        type: "Symbol",
+        required: true,
+        validations: [{ in: ["Left", "Right"] }],
+      },
+    ],
+  });
   await publishContentType(imageTextSection);
 
-  // 5. Page
-  const page = await getOrCreateContentType(env, "page", {
+  // 6. Page
+  const page = await createNewContentType(env, "page", {
     name: "Page",
     description: "A page composed of multiple content blocks.",
     displayField: "title",
@@ -203,7 +202,12 @@ async function run() {
           linkType: "Entry",
           validations: [
             {
-              linkContentType: ["heroSection", "imageTextSection", "carousel"],
+              linkContentType: [
+                "heroSection",
+                "imageTextSection",
+                "carousel",
+                "cta",
+              ],
             },
           ],
         },
@@ -212,8 +216,8 @@ async function run() {
   });
   await publishContentType(page);
 
-  // 6. Carousel Image
-  const carouselImage = await getOrCreateContentType(env, "carouselImage", {
+  // 7. Carousel Image
+  const carouselImage = await createNewContentType(env, "carouselImage", {
     name: "Carousel Image",
     description:
       "An image with alt text and an optional caption for a carousel.",
@@ -232,8 +236,8 @@ async function run() {
   });
   await publishContentType(carouselImage);
 
-  // 7. Carousel
-  const carousel = await getOrCreateContentType(env, "carousel", {
+  // 8. Carousel
+  const carousel = await createNewContentType(env, "carousel", {
     name: "Carousel",
     description: "A rotating carousel of images.",
     displayField: "title",
@@ -255,8 +259,8 @@ async function run() {
   });
   await publishContentType(carousel);
 
-  // 8. Footer
-  const footer = await getOrCreateContentType(env, "footer", {
+  // 9. Footer
+  const footer = await createNewContentType(env, "footer", {
     name: "Footer",
     description: "The website footer.",
     fields: [
