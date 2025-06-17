@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "contentful:setup": "tsx scripts/setup-contentful.ts"
+    "contentful:setup": "tsx scripts/setup-contentful.ts",
+    "generate:types": "tsx scripts/generate-types.ts"
   },
   "dependencies": {
     "contentful": "^11.7.2",
@@ -17,6 +18,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@contentful/rich-text-types": "^17.0.1",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -25,6 +27,7 @@
     "dotenv": "^16.5.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "graphql-request": "^7.2.0",
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
     "typescript": "^5"
