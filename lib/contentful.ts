@@ -12,7 +12,8 @@ type ContentfulResponse<T = unknown> = {
 export const fetchContentfulGraphQL = async <T = unknown>(
   query: string,
   variables?: Record<string, unknown>,
-  preview = false
+  preview = false,
+  revalidate?: number | false
 ): Promise<T> => {
   if (!CONTENTFUL_SPACE_ID) {
     throw new Error("CONTENTFUL_SPACE_ID environment variable is not set");
@@ -40,7 +41,7 @@ export const fetchContentfulGraphQL = async <T = unknown>(
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: preview ? 0 : 3600 }, // preview - no cache, 1 hour for production
+      next: { revalidate: preview ? 0 : revalidate ?? 3600 }, // preview - no cache, custom revalidate or 1 hour default
     });
 
     if (!response.ok) {
