@@ -15,9 +15,9 @@ export const ImageTextSection = ({ block }: ImageTextSectionProps) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Image */}
           <div className={`${isImageRight ? "lg:order-last" : ""}`}>
-            {block.image && (
+            {block.image?.url && (
               <Image
-                src={block.image.url || ""}
+                src={block.image.url}
                 alt={block.image.description || ""}
                 width={600}
                 height={400}

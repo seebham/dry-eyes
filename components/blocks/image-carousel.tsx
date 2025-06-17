@@ -1,6 +1,6 @@
 "use client";
 
-import type { Carousel as CarouselType } from "@/lib/types";
+import type { CarouselImage, Carousel as CarouselType } from "@/lib/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -23,11 +23,8 @@ export const ImageCarousel = ({ block }: ImageCarouselProps) => {
   const autoplayRef = useRef<NodeJS.Timeout | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  if (!block?.imagesCollection?.items?.length) {
-    return null;
-  }
-
-  const slides = block.imagesCollection.items;
+  // Get slides from the carousel data
+  const slides = block?.imagesCollection?.items || [];
   const totalSlides = slides.length;
 
   // Auto-play functionality
@@ -70,6 +67,12 @@ export const ImageCarousel = ({ block }: ImageCarouselProps) => {
     goToSlide(prevIndex);
   }, [currentIndex, totalSlides, goToSlide]);
 
+  // autoplay
+  useEffect(() => {
+    startAutoplay();
+    return stopAutoplay;
+  }, [startAutoplay, stopAutoplay]);
+
   // Touch handlers for swipe gestures
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(0);
@@ -94,12 +97,6 @@ export const ImageCarousel = ({ block }: ImageCarouselProps) => {
     }
   };
 
-  // autoplay
-  useEffect(() => {
-    startAutoplay();
-    return stopAutoplay;
-  }, [startAutoplay, stopAutoplay]);
-
   // pause on hover
   const handleMouseEnter = () => {
     setIsPaused(true);
@@ -123,6 +120,10 @@ export const ImageCarousel = ({ block }: ImageCarouselProps) => {
       zIndex: offset === 0 ? 2 : 1,
     };
   };
+
+  if (!slides.length) {
+    return null;
+  }
 
   return (
     <section className="py-16">
@@ -149,7 +150,7 @@ export const ImageCarousel = ({ block }: ImageCarouselProps) => {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            {slides.map((carouselImage, index) => {
+            {slides.map((carouselImage: CarouselImage, index: number) => {
               if (!carouselImage?.image?.url) return null;
 
               const slideStyle = getSlideTransform(index);
@@ -223,7 +224,7 @@ export const ImageCarousel = ({ block }: ImageCarouselProps) => {
           {/* Progress indicator */}
           {totalSlides > 1 && (
             <div className="flex justify-center mt-6 space-x-2">
-              {slides.map((_, index) => (
+              {slides.map((_: CarouselImage, index: number) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}

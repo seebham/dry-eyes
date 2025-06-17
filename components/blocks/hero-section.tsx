@@ -9,9 +9,9 @@ export const HeroSection = ({ block }: HeroSectionProps) => {
   return (
     <section className="relative h-[79dvh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
-      {block.backgroundImage && (
+      {block.backgroundImage?.url && (
         <Image
-          src={block.backgroundImage.url || ""}
+          src={block.backgroundImage.url}
           alt={block.backgroundImageAlt || ""}
           fill
           className="object-cover"

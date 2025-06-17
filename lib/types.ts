@@ -30,9 +30,10 @@ export type ContentfulMetadata = {
 
 export type Asset = {
   sys: Sys;
-  contentfulMetadata: ContentfulMetadata;
+  contentfulMetadata?: ContentfulMetadata;
   title?: string;
   description?: string;
+  url?: string;
   file?: {
     url: string;
     details?: {
@@ -88,7 +89,9 @@ export type Carousel = Entry & {
   _id?: string;
   title?: string;
   description?: string;
-  imagesCollection?: Array<CarouselImage>;
+  imagesCollection?: {
+    items: Array<CarouselImage>;
+  };
 };
 
 export type CarouselImage = Entry & {
@@ -125,7 +128,9 @@ export type Footer = Entry & {
   _id?: string;
   title?: string;
   copyrightText?: string;
-  footerLinksCollection?: Array<NavLink>;
+  footerLinksCollection?: {
+    items: Array<NavLink>;
+  };
 };
 
 export type NavLink = Entry & {
@@ -137,7 +142,9 @@ export type NavLink = Entry & {
 export type Navigation = Entry & {
   _id?: string;
   title?: string;
-  navLinksCollection?: Array<NavLink>;
+  navLinksCollection?: {
+    items: Array<NavLink>;
+  };
 };
 
 // Collection types
