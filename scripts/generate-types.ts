@@ -79,9 +79,10 @@ export type ContentfulMetadata = {
 
 export type Asset = {
   sys: Sys;
-  contentfulMetadata: ContentfulMetadata;
+  contentfulMetadata?: ContentfulMetadata;
   title?: string;
   description?: string;
+  url?: string;
   file?: {
     url: string;
     details?: {
@@ -149,26 +150,28 @@ function mapGraphQLTypeToTypeScript(type: any, fieldName?: string): string {
     case "Asset":
       return "Asset";
     default:
-      // Handle specific known collection patterns
+      // Handle specific known collection patterns - these should be collection objects, not direct arrays
       if (fieldName === "contentBlocksCollection") {
-        return "Array<HeroSection | ImageTextSection | Carousel>";
+        return "{ items: Array<HeroSection | ImageTextSection | Carousel | Cta> }";
       }
       if (fieldName === "imagesCollection") {
-        return "Array<CarouselImage>";
+        return "{ items: Array<CarouselImage> }";
       }
       if (
         fieldName === "footerLinksCollection" ||
         fieldName === "navLinksCollection"
       ) {
-        return "Array<NavLink>";
+        return "{ items: Array<NavLink> }";
       }
       if (fieldName === "content" && type.name?.includes("Content")) {
         return "RichText";
       }
 
-      // Handle other collection types
+      // Handle other collection types - these are objects with items property
       if (type.name && type.name.includes("Collection")) {
-        return "any";
+        // Extract the base type name from the collection name
+        const baseTypeName = type.name.replace("Collection", "");
+        return `{ items: Array<${baseTypeName}> }`;
       }
       return type.name || "any";
   }

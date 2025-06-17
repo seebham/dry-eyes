@@ -89,9 +89,7 @@ export type Carousel = Entry & {
   _id?: string;
   title?: string;
   description?: string;
-  imagesCollection?: {
-    items: Array<CarouselImage>;
-  };
+  imagesCollection?: { items: Array<CarouselImage> };
 };
 
 export type CarouselImage = Entry & {
@@ -128,9 +126,7 @@ export type Footer = Entry & {
   _id?: string;
   title?: string;
   copyrightText?: string;
-  footerLinksCollection?: {
-    items: Array<NavLink>;
-  };
+  footerLinksCollection?: { items: Array<NavLink> };
 };
 
 export type NavLink = Entry & {
@@ -142,9 +138,7 @@ export type NavLink = Entry & {
 export type Navigation = Entry & {
   _id?: string;
   title?: string;
-  navLinksCollection?: {
-    items: Array<NavLink>;
-  };
+  navLinksCollection?: { items: Array<NavLink> };
 };
 
 // Collection types
