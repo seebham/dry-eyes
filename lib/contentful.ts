@@ -4,13 +4,14 @@ const CONTENTFUL_PREVIEW_ACCESS_TOKEN =
   process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN;
 const CONTENTFUL_ENVIRONMENT = process.env.CONTENTFUL_ENVIRONMENT || "master";
 
-type ContentfulResponse<T = any> = {
+type ContentfulResponse<T = unknown> = {
   data: T;
   errors?: Array<{ message: string }>;
 };
 
-export const fetchContentfulGraphQL = async <T = any>(
+export const fetchContentfulGraphQL = async <T = unknown>(
   query: string,
+  variables?: Record<string, unknown>,
   preview = false
 ): Promise<T> => {
   if (!CONTENTFUL_SPACE_ID) {
@@ -38,12 +39,20 @@ export const fetchContentfulGraphQL = async <T = any>(
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ query }),
-      next: { revalidate: preview ? 0 : 3600 }, // No cache for preview, 1 hour for production
+      body: JSON.stringify({ query, variables }),
+      next: { revalidate: preview ? 0 : 3600 }, // preview - no cache, 1 hour for production
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      let errorDetails;
+      try {
+        errorDetails = await response.text();
+      } catch {
+        errorDetails = "Unable to read error response";
+      }
+      throw new Error(
+        `HTTP error! status: ${response.status}, details: ${errorDetails}`
+      );
     }
 
     const json: ContentfulResponse<T> = await response.json();
@@ -57,6 +66,8 @@ export const fetchContentfulGraphQL = async <T = any>(
     return json.data;
   } catch (error) {
     console.error("Contentful GraphQL request failed:", error);
+    console.error("Query:", query);
+    console.error("Variables:", variables);
     throw error;
   }
 };
