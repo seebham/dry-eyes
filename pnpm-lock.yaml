@@ -8,12 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@contentful/rich-text-react-renderer':
+        specifier: ^16.0.2
+        version: 16.0.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       contentful:
         specifier: ^11.7.2
         version: 11.7.2
       contentful-management:
         specifier: ^11.53.0
         version: 11.53.0
+      lucide-react:
+        specifier: ^0.516.0
+        version: 0.516.0(react@19.1.0)
       next:
         specifier: 15.3.3
         version: 15.3.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -76,6 +82,13 @@ packages:
 
   '@contentful/content-source-maps@0.11.20':
     resolution: {integrity: sha512-q1Zp1TZcQEVvJ7qxSnkmhe7JWFXH8EBhIGvtWu8pmAkea9ET5rTM5m2/fiu3nIcKc18pX+iv+Pb1K3UgeHRl8w==}
+
+  '@contentful/rich-text-react-renderer@16.0.2':
+    resolution: {integrity: sha512-rh1leRqndG3RzWQTKOXu7GrLGY2ijlrGkDi+df9sI14aaj6Tl2vCoHwEtmW5kjNS5XBwo+RSR86j1ro9fDTnfw==}
+    engines: {node: '>=6.0.0'}
+    peerDependencies:
+      react: ^16.8.6 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@contentful/rich-text-types@16.8.5':
     resolution: {integrity: sha512-q18RJuJCOuYveGiCIjE5xLCQc5lZ3L2Qgxrlg/H2YEobDFqdtmklazRi1XwEWaK3tMg6yVXBzKKkQfLB4qW14A==}
@@ -1641,6 +1654,11 @@ packages:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
 
+  lucide-react@0.516.0:
+    resolution: {integrity: sha512-aybBJzLHcw1CIn3rUcRkztB37dsJATtpffLNX+0/w+ws2p21nYIlOwX/B5fqxq8F/BjqVemnJX8chKwRidvROg==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
 
@@ -2140,6 +2158,12 @@ snapshots:
     dependencies:
       '@vercel/stega': 0.1.2
       json-pointer: 0.6.2
+
+  '@contentful/rich-text-react-renderer@16.0.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@contentful/rich-text-types': 17.0.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   '@contentful/rich-text-types@16.8.5': {}
 
@@ -3751,6 +3775,10 @@ snapshots:
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
+
+  lucide-react@0.516.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
 
   magic-string@0.30.17:
     dependencies:
