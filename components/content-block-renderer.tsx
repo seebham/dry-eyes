@@ -1,4 +1,5 @@
 import type { ContentBlock } from "@/lib/api";
+import { CTA } from "./blocks/cta";
 import { HeroSection } from "./blocks/hero-section";
 import { ImageCarousel } from "./blocks/image-carousel";
 import { ImageTextSection } from "./blocks/image-text-section";
@@ -8,6 +9,7 @@ const componentMap = {
   HeroSection: HeroSection,
   ImageTextSection: ImageTextSection,
   Carousel: ImageCarousel,
+  Cta: CTA,
 } as const;
 
 type ContentBlockRendererProps = {

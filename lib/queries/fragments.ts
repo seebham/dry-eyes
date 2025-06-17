@@ -23,8 +23,7 @@ export const HERO_SECTION_FRAGMENT = `
       title
       description
     }
-    ctaText
-    ctaUrl
+    backgroundImageAlt
   }
 `;
 
@@ -73,5 +72,17 @@ export const CAROUSEL_FRAGMENT = `
         caption
       }
     }
+  }
+`;
+
+export const CTA_FRAGMENT = `
+  fragment CtaFragment on Cta {
+    sys {
+      id
+    }
+    title
+    description
+    ctaTitle
+    ctaUrl
   }
 `;

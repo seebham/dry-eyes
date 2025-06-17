@@ -33,7 +33,6 @@ export type Asset = {
   contentfulMetadata: ContentfulMetadata;
   title?: string;
   description?: string;
-  url?: string;
   file?: {
     url: string;
     details?: {
@@ -68,20 +67,12 @@ export type Entry = {
   contentfulMetadata: ContentfulMetadata;
 };
 
-export type CarouselImage = Entry & {
+export type HeroSection = Entry & {
   _id?: string;
-  image?: Asset;
-  altText?: string;
-  caption?: string;
-};
-
-export type Carousel = Entry & {
-  _id?: string;
-  title?: string;
-  description?: string;
-  imagesCollection?: {
-    items: Array<CarouselImage>;
-  };
+  headline?: string;
+  subtext?: string;
+  backgroundImage?: Asset;
+  backgroundImageAlt?: string;
 };
 
 export type Page = Entry & {
@@ -89,17 +80,29 @@ export type Page = Entry & {
   title?: string;
   slug?: string;
   contentBlocksCollection?: {
-    items: Array<HeroSection | ImageTextSection | Carousel>;
+    items: Array<HeroSection | ImageTextSection | Carousel | Cta>;
   };
 };
 
-export type HeroSection = Entry & {
+export type Carousel = Entry & {
   _id?: string;
-  headline?: string;
-  subtext?: string;
-  backgroundImage?: Asset;
-  backgroundImageAlt?: string;
-  ctaText?: string;
+  title?: string;
+  description?: string;
+  imagesCollection?: Array<CarouselImage>;
+};
+
+export type CarouselImage = Entry & {
+  _id?: string;
+  image?: Asset;
+  altText?: string;
+  caption?: string;
+};
+
+export type Cta = Entry & {
+  _id?: string;
+  title?: string;
+  description?: string;
+  ctaTitle?: string;
   ctaUrl?: string;
 };
 
@@ -122,9 +125,7 @@ export type Footer = Entry & {
   _id?: string;
   title?: string;
   copyrightText?: string;
-  footerLinksCollection?: {
-    items: Array<NavLink>;
-  };
+  footerLinksCollection?: Array<NavLink>;
 };
 
 export type NavLink = Entry & {
@@ -136,24 +137,15 @@ export type NavLink = Entry & {
 export type Navigation = Entry & {
   _id?: string;
   title?: string;
-  navLinksCollection?: {
-    items: Array<NavLink>;
-  };
+  navLinksCollection?: Array<NavLink>;
 };
 
 // Collection types
-export type CarouselImageCollection = {
+export type HeroSectionCollection = {
   total: number;
   skip: number;
   limit: number;
-  items: Array<CarouselImage>;
-};
-
-export type CarouselCollection = {
-  total: number;
-  skip: number;
-  limit: number;
-  items: Array<Carousel>;
+  items: Array<HeroSection>;
 };
 
 export type PageCollection = {
@@ -163,11 +155,25 @@ export type PageCollection = {
   items: Array<Page>;
 };
 
-export type HeroSectionCollection = {
+export type CarouselCollection = {
   total: number;
   skip: number;
   limit: number;
-  items: Array<HeroSection>;
+  items: Array<Carousel>;
+};
+
+export type CarouselImageCollection = {
+  total: number;
+  skip: number;
+  limit: number;
+  items: Array<CarouselImage>;
+};
+
+export type CtaCollection = {
+  total: number;
+  skip: number;
+  limit: number;
+  items: Array<Cta>;
 };
 
 export type ImageTextSectionCollection = {

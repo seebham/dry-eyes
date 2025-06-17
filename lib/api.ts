@@ -2,6 +2,7 @@ import { fetchContentfulGraphQL } from "./contentful";
 import { GET_ALL_PAGES_QUERY, GET_PAGE_BY_SLUG_QUERY } from "./queries";
 import type {
   Carousel as CarouselType,
+  Cta as CtaType,
   HeroSection as HeroSectionType,
   ImageTextSection as ImageTextSectionType,
   Page,
@@ -11,6 +12,7 @@ export type ContentBlock = (
   | HeroSectionType
   | ImageTextSectionType
   | CarouselType
+  | CtaType
 ) & {
   __typename?: string;
 };
