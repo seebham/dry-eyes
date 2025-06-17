@@ -1,5 +1,4 @@
-
-import { Document } from '@contentful/rich-text-types';
+import { Document } from "@contentful/rich-text-types";
 
 export type Sys = {
   id: string;
@@ -8,8 +7,8 @@ export type Sys = {
   contentType?: {
     sys: {
       id: string;
-      linkType: 'ContentType';
-      type: 'Link';
+      linkType: "ContentType";
+      type: "Link";
     };
   };
   revision?: number;
@@ -22,8 +21,8 @@ export type Sys = {
 export type ContentfulMetadata = {
   tags: Array<{
     sys: {
-      type: 'Link';
-      linkType: 'Tag';
+      type: "Link";
+      linkType: "Tag";
       id: string;
     };
   }>;
@@ -34,6 +33,7 @@ export type Asset = {
   contentfulMetadata: ContentfulMetadata;
   title?: string;
   description?: string;
+  url?: string;
   file?: {
     url: string;
     details?: {
@@ -68,7 +68,6 @@ export type Entry = {
   contentfulMetadata: ContentfulMetadata;
 };
 
-
 export type CarouselImage = Entry & {
   _id?: string;
   image?: Asset;
@@ -80,14 +79,18 @@ export type Carousel = Entry & {
   _id?: string;
   title?: string;
   description?: string;
-  imagesCollection?: Array<CarouselImage>;
+  imagesCollection?: {
+    items: Array<CarouselImage>;
+  };
 };
 
 export type Page = Entry & {
   _id?: string;
   title?: string;
   slug?: string;
-  contentBlocksCollection?: Array<HeroSection | ImageTextSection | Carousel>;
+  contentBlocksCollection?: {
+    items: Array<HeroSection | ImageTextSection | Carousel>;
+  };
 };
 
 export type HeroSection = Entry & {
@@ -109,20 +112,19 @@ export type ImageTextSection = Entry & {
   imagePosition?: string;
 };
 
-export type ImageTextSectionContentResourcesBlock = Entry & {
-};
+export type ImageTextSectionContentResourcesBlock = Entry & {};
 
-export type ImageTextSectionContentResourcesInline = Entry & {
-};
+export type ImageTextSectionContentResourcesInline = Entry & {};
 
-export type ImageTextSectionContentResourcesHyperlink = Entry & {
-};
+export type ImageTextSectionContentResourcesHyperlink = Entry & {};
 
 export type Footer = Entry & {
   _id?: string;
   title?: string;
   copyrightText?: string;
-  footerLinksCollection?: Array<NavLink>;
+  footerLinksCollection?: {
+    items: Array<NavLink>;
+  };
 };
 
 export type NavLink = Entry & {
@@ -134,7 +136,9 @@ export type NavLink = Entry & {
 export type Navigation = Entry & {
   _id?: string;
   title?: string;
-  navLinksCollection?: Array<NavLink>;
+  navLinksCollection?: {
+    items: Array<NavLink>;
+  };
 };
 
 // Collection types
@@ -214,4 +218,3 @@ export type NavigationCollection = {
   limit: number;
   items: Array<Navigation>;
 };
-
