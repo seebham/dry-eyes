@@ -1,6 +1,5 @@
 import type { HeroSection as HeroSectionType } from "@/lib/types";
 import Image from "next/image";
-import Link from "next/link";
 
 type HeroSectionProps = {
   block: HeroSectionType;
@@ -8,7 +7,7 @@ type HeroSectionProps = {
 
 export const HeroSection = ({ block }: HeroSectionProps) => {
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative h-[79dvh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       {block.backgroundImage && (
         <Image
@@ -21,7 +20,7 @@ export const HeroSection = ({ block }: HeroSectionProps) => {
       )}
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-50" />
+      <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
       <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
@@ -34,16 +33,10 @@ export const HeroSection = ({ block }: HeroSectionProps) => {
         {block.subtext && (
           <p className="text-xl md:text-2xl mb-8 opacity-90">{block.subtext}</p>
         )}
-
-        {block.ctaText && block.ctaUrl && (
-          <Link
-            href={block.ctaUrl}
-            className="inline-block bg-white text-black px-8 py-4 text-lg font-semibold hover:bg-gray-100 transition-colors"
-          >
-            {block.ctaText}
-          </Link>
-        )}
       </div>
+
+      {/* Blue overlay */}
+      <div className="absolute z-40 inset-0 backdrop-blur-[1px]" />
     </section>
   );
 };
