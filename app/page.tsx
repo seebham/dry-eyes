@@ -2,7 +2,7 @@ import { ContentBlockRenderer } from "@/components/content-block-renderer";
 import { getPageBySlug } from "@/lib/api";
 
 export default async function HomePage() {
-  const page = await getPageBySlug("/", false, false); // SSG - static generation
+  const page = await getPageBySlug("/", false, false);
 
   if (!page) {
     return (
